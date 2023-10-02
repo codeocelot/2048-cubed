@@ -65,22 +65,25 @@ export default class Renderer {
     this.scene.background = new THREE.Color('white');
 
     // DEMO 1
-    // if (this.options.background) {
-    //   this.scene.background = new THREE.CubeTextureLoader().setPath('/images/skybox/')
-    //     .load(['negx.jpg', 'posx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg']);
-    // } else {
-    //   this.scene.background = new THREE.Color('white');
-    // }
+    if (this.options.epicLevel >= 1 && this.options.background) {
+      this.scene.background = new THREE.CubeTextureLoader().setPath('/images/skybox/')
+        .load(['negx.jpg', 'posx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg']);
+    } else {
+      this.scene.background = new THREE.Color('white');
+    }
     return this;
   };
 
   setupLights = () => {
-    this.scene.add(new THREE.AmbientLight('white', 5));
+    if (this.options.epicLevel >= 2) {
+      this.scene.add(new THREE.AmbientLight('white'));
+      const pointLight = new THREE.PointLight('white', 10000);
+      pointLight.position.set(10, 10, -20);
+      this.scene.add(pointLight);
+    } else {
+      this.scene.add(new THREE.AmbientLight('white', 5));
+    }
 
-    // DEMO 2
-    // const pointLight = new THREE.PointLight('white', 10000);
-    // pointLight.position.set(10, 10, -20);
-    // this.scene.add(pointLight);
     return this;
   };
 
@@ -179,9 +182,12 @@ export default class Renderer {
 
   loadCubeVisuals = () => {
     const loader = new THREE.TextureLoader();
-    const common = { shininess: 200, reflectivity: 0.7 };
+    let common = { shininess: 200, reflectivity: 0.7 };
     // DEMO 3
-    // const common = { shininess: 200, reflectivity: 0.7, envMap: this.scene.background };
+    if (this.options.epicLevel >= 3) {
+      common = { shininess: 200, reflectivity: 0.7, envMap: this.scene.background };
+    }
+
     // TODO: Better color palette
     const cubeVisuals = {
       2: { ...common, color: 'red' },

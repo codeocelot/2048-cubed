@@ -33,6 +33,10 @@ export default class Manager {
       background: true
     }, options);
 
+    if (this.options.epicLevel === 4) {
+      this.options.dimensions = [4, 4, 4];
+    }
+
     this.dimensions = Manager.normalizeDimensions(this.options.dimensions);
     this.renderer = new Renderer(this.dimensions, this.options);
     this.controller = new Controller();
